@@ -1,4 +1,4 @@
-import 'package:e_commerce_app/provider/signInWithGoogle.dart';
+import 'package:e_commerce_app/viewmodel/provider/signInWithGoogle.dart';
 import 'package:e_commerce_app/view/navbar.dart';
 import 'package:e_commerce_app/view/numberverification.dart';
 import 'package:e_commerce_app/view/dashbord.dart';

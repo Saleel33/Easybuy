@@ -31,7 +31,7 @@ class Product {
   String description;
   int price;
   double discountPercentage;
-  double rating;
+  double rating;  
   int stock;
   String brand;
   String category;

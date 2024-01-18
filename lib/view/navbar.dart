@@ -1,7 +1,8 @@
-import 'package:e_commerce_app/view/Wishlistpage.dart';
 import 'package:e_commerce_app/view/cartpage.dart';
 import 'package:e_commerce_app/view/dashbord.dart';
+import 'package:e_commerce_app/view/ordrpage.dart';
 import 'package:e_commerce_app/view/profilepage.dart';
+import 'package:e_commerce_app/view/wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -15,8 +16,9 @@ class MyNavigationBar extends StatefulWidget {
 class _MyNavigationBarState extends State<MyNavigationBar> {
   final List<Widget> screens = [
     ProductPage(),
-    WishListPage(),
+    OrderPage(),
     CartPage(),
+    WishlistPage(),
     ProfilePage(),
   ];
   var _currentIndex = 0;
@@ -36,8 +38,8 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
 
           /// Likes
           SalomonBottomBarItem(
-            icon: Icon(Icons.favorite_border),
-            title: Text("Likes"),
+            icon: Icon(Icons.shopping_bag_outlined),
+            title: Text("Orders"),
             selectedColor: Colors.pink,
           ),
 
@@ -49,6 +51,11 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
           ),
 
           /// Profile
+          SalomonBottomBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text("Wishlist"),
+            selectedColor: Colors.red,
+          ),
           SalomonBottomBarItem(
             icon: Icon(Icons.person),
             title: Text("Profile"),

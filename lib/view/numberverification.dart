@@ -1,4 +1,4 @@
-import 'package:e_commerce_app/provider/numberverificationProvider.dart';
+import 'package:e_commerce_app/viewmodel/provider/numberverificationProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

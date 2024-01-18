@@ -1,7 +1,7 @@
-import 'package:e_commerce_app/provider/APIfetchingprovider.dart';
 import 'package:e_commerce_app/view/cartpage.dart';
 import 'package:e_commerce_app/view/productdetailspage.dart';
 import 'package:e_commerce_app/view/widgetsCollection.dart';
+import 'package:e_commerce_app/viewmodel/provider/APIfetchingprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -79,9 +79,11 @@ class _ProductPageState extends State<ProductPage> {
                       child: Row(
                         children: [
                           Expanded(
-                            flex: 1,
-                            child: Image.network('${products.thumbnail}'),
-                          ),
+                              flex: 1,
+                              child: Container(
+                                height: 130,
+                                child: Image.network('${products.thumbnail}'),
+                              )),
                           Expanded(
                             flex: 2,
                             child: ListTile(
@@ -158,6 +160,7 @@ class SearchPage extends StatelessWidget {
             height: height / 17,
             width: width / .5,
             child: TextField(
+              textAlignVertical: TextAlignVertical.bottom,
               onChanged: (value) {
                 providerObj.searching(value);
               },
@@ -173,7 +176,7 @@ class SearchPage extends StatelessWidget {
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(13),
                   borderSide: BorderSide(color: Colors.white70),
                 ),
               ),

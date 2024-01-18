@@ -1,8 +1,8 @@
 import 'package:e_commerce_app/firebase_options.dart';
-import 'package:e_commerce_app/provider/APIfetchingprovider.dart';
-import 'package:e_commerce_app/provider/cartprovider.dart';
-import 'package:e_commerce_app/provider/numberverificationProvider.dart';
-import 'package:e_commerce_app/provider/signInWithGoogle.dart';
+import 'package:e_commerce_app/viewmodel/provider/APIfetchingprovider.dart';
+import 'package:e_commerce_app/viewmodel/provider/cartprovider.dart';
+import 'package:e_commerce_app/viewmodel/provider/numberverificationProvider.dart';
+import 'package:e_commerce_app/viewmodel/provider/signInWithGoogle.dart';
 import 'package:e_commerce_app/view/dashbord.dart';
 import 'package:e_commerce_app/view/splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';

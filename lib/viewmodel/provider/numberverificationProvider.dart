@@ -1,5 +1,5 @@
+import 'package:e_commerce_app/view/navbar.dart';
 import 'package:e_commerce_app/view/numberverification.dart';
-import 'package:e_commerce_app/view/dashbord.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -34,10 +34,11 @@ class Numberverification extends ChangeNotifier {
     );
     await auth.signInWithCredential(credential).then((value) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ProductPage()));
+          context, MaterialPageRoute(builder: (context) => MyNavigationBar()));
       print('User Login In Successful');
     });
     notifyListeners();
   }
+
   var receivedID = '';
 }

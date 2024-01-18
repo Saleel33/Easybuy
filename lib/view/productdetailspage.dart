@@ -2,13 +2,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:e_commerce_app/model/model.dart';
-import 'package:e_commerce_app/provider/cartprovider.dart';
 import 'package:e_commerce_app/view/cartpage.dart';
 import 'package:e_commerce_app/view/dashbord.dart';
 import 'package:e_commerce_app/view/widgetsCollection.dart';
+import 'package:e_commerce_app/viewmodel/provider/APIfetchingprovider.dart';
+import 'package:e_commerce_app/viewmodel/provider/cartprovider.dart';
+import 'package:e_commerce_app/viewmodel/razorpay.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   ProductDetailsPage({super.key, required this.product});
@@ -19,16 +22,38 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
+  int totalPrize = 0;
+  RazorPayIntegration razorPayIntegration = RazorPayIntegration();
+  final _razorpay = Razorpay();
+
+  @override
+  void initState() {
+    Provider.of<CartProvider>(context, listen: false)
+        .wishListColor(widget.product);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear(); // Removes all listeners
+    super.dispose();
+  }
+
   var size, height, width;
   int currentIndex = 0;
   WidgetsCollection Obj = WidgetsCollection();
 
-  final CollectionReference cart =
-      FirebaseFirestore.instance.collection('cart');
+  final cart = FirebaseFirestore.instance
+      .collection('cart')
+      .doc(FirebaseAuth.instance.currentUser?.uid);
 
   @override
   Widget build(BuildContext context) {
+    totalPrize = Provider.of<CartProvider>(context).totalPrice;
     final providerObj = Provider.of<CartProvider>(context, listen: false);
+    final providerObject =
+        Provider.of<APIfetchingProvider>(context, listen: false);
+
     //size of the window
     size = MediaQuery.of(context).size;
     height = size.height;
@@ -88,28 +113,55 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CarouselSlider(
-                options: CarouselOptions(
-                    enableInfiniteScroll: false,
-                    height: height / 1.9,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        currentIndex = index;
-                      });
-                    }),
-                items: widget.product.images.map((imageUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(color: Colors.white),
-                        child: Image.network(imageUrl),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+              Stack(children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                      enableInfiniteScroll: false,
+                      height: height / 1.9,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          currentIndex = index;
+                        });
+                      }),
+                  items: widget.product.images.map((imageUrl) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(color: Colors.white),
+                          child: Image.network(imageUrl),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+                Positioned(
+                  top: 7,
+                  right: 7,
+                  child: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.grey[300],
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          providerObj.colourBlink = !providerObj.colourBlink;
+                          if (providerObj.colourBlink) {
+                            providerObj.addtoWishList(widget.product);
+                          } else {
+                            providerObj.wishlistDelete(widget.product);
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        Icons.favorite,
+                        color:
+                            widget.product.isClick ? Colors.red : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
               new DotsIndicator(
                 dotsCount: widget.product.images.length,
                 position: currentIndex,
@@ -175,7 +227,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   backgroundColor: (Colors.blueGrey),
                 )),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                providerObj.placeOrderFromProductPage(widget.product);
+                razorPayIntegration.paymentResponse(context);
+                razorPayIntegration.razorPayFunction(providerObj.totalPrice);
+              },
               child: Text('Buy Now'),
               style: ElevatedButton.styleFrom(
                 shape: BeveledRectangleBorder(
